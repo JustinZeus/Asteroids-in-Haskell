@@ -5,6 +5,7 @@ import Model
 import View
 
 import Graphics.Gloss.Interface.IO.Game
+import Graphics.Gloss.Data.Picture
 
 main :: IO ()
 main = playIO (InWindow "Counter" (400, 400) (0, 0)) -- Or FullScreen
