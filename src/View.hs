@@ -11,3 +11,5 @@ view = return . viewPure
 viewPure :: GameState -> Picture
 viewPure gstate = case infoToShow gstate of
   ShowNothing   -> blank
+  ShowANumber n -> color red (text (show n))
+  ShowAChar   c -> color blue (text [c])
