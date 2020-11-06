@@ -13,9 +13,10 @@ data GameState = GameState {
                    infoToShow  :: InfoToShow
                  , elapsedTime :: Float
                  }
+
 type Point = (Float,Float)
 data Collider = C Point Float 
-data Player = P Collider Health Bullet 
+data Player = Player Collider Health Bullet 
 data Health = H Int
 data Bullet = B Collider
 
