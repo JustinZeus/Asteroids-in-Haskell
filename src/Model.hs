@@ -14,7 +14,6 @@ data GameState = GameState {
                  , elapsedTime :: Float
                  }
 
-type Point =  (Float, Float)
 
 initialState :: GameState
 initialState = GameState ShowNothing 0
