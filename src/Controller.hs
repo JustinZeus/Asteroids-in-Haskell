@@ -15,7 +15,7 @@ step secs gstate
   = -- We show a new random number
     do randomNumber <- randomIO
        let newNumber = abs randomNumber `mod` 10
-       return $ pictures [position_sps (player gstate)]
+       return $ GameState (ShowANumber newNumber) 0
   | otherwise
   = -- Just update the elapsed time
     return $ gstate { elapsedTime = elapsedTime gstate + secs }
