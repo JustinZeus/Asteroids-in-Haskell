@@ -9,10 +9,17 @@ data InfoToShow = ShowNothing
 data Player = NoPlayer
               |Player {collider :: Collider, velocity :: Velocity} 
               deriving (Eq,Show)
+
 data Bullet = B Collider
   deriving (Eq,Show)
+
 data Collider = Collider {position :: Point, radius :: Float} 
   deriving (Eq,Show)
+
+data Aestroid = NoAestroid
+                |Aestroid Collider Velocity   
+    deriving (Eq,Show)
+
 data Health = NoHealth
               |H Int
 type Point = (Float, Float)
@@ -23,6 +30,7 @@ nO_SECS_BETWEEN_CYCLES = 5
 
 data GameState = GameState {
                   player :: Player
+                , aestroids :: Aestroid  
                 , health :: Health
                 , elapsedTime :: Float
                  }
@@ -30,6 +38,6 @@ data GameState = GameState {
 
 
 initialState :: GameState
-initialState = GameState NoPlayer NoHealth 0
+initialState = GameState NoPlayer NoAestroid NoHealth 0
 
 
