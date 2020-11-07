@@ -32,11 +32,4 @@ data GameState = GameState {
 initialState :: GameState
 initialState = GameState NoPlayer NoHealth 0
 
-updatePlayerPos :: Player -> Maybe (Float, Float)
-updatePlayerPos player@(Player c v)
-    | player == NoPlayer = Nothing
-    | otherwise = Just (useVelocity c v)
 
-useVelocity :: (Float, Float) -> Float -> (Float, Float) -> (Float, Float)
-useVelocity _ z (x, y) = (0,0)
-useVelocity (x,y) z (a,b) = (x+a, y+b)
