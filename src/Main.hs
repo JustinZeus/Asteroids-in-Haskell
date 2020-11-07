@@ -8,7 +8,7 @@ import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Data.Picture
 
 main :: IO ()
-main = playIO (InWindow "Counter" (400, 400) (0, 0)) -- Or FullScreen
+main = playIO (InWindow "Asteroids" (800, 800) (0, 0)) -- Or FullScreen
               black            -- Background color
               10               -- Frames per second
               initialState     -- Initial state
