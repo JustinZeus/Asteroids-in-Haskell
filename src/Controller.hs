@@ -10,7 +10,7 @@ import System.Random
 
 -- | Handle one iteration of the game
 step :: Float -> GameState -> IO GameState
-step secs gstate = return $ gstate { elapsedTime = elapsedTime gstate + secs }
+step secs gstate = return $ gstate { elapsedTime = elapsedTime gstate + secs}
 
 -- | Handle user input
 input :: Event -> GameState -> IO GameState
@@ -20,5 +20,5 @@ inputKey :: Event -> GameState -> GameState
 inputKey (EventKey (Char c) _ _ _) gstate
    -- if any key other than z show player
     | c == 'p' = gstate {player = NoPlayer}
-    | c == 'u' = gstate { player = Player (Collider (0,0) 20) }
+    | c == 'u' = gstate { player = Player (Collider (0,0) 20) (0,0)}
 inputKey _ gstate = gstate -- Otherwise keep the same
