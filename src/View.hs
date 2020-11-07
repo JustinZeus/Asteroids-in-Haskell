@@ -15,7 +15,3 @@ position_sps :: Player -> Picture
 position_sps (Player (C(x,y) f) _ _) = translate x y spaceship
 
 viewPure :: GameState -> Picture
-viewPure gstate = case infoToShow gstate of
-  ShowNothing   -> blank
-  ShowANumber n -> color red (text (show n))
-  ShowAChar   c -> color blue (text [c])

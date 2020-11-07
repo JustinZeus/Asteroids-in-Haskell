@@ -10,15 +10,19 @@ nO_SECS_BETWEEN_CYCLES :: Float
 nO_SECS_BETWEEN_CYCLES = 5
 
 data GameState = GameState {
-                   infoToShow  :: InfoToShow
+                  player :: Player
+                 , bullets :: [Bullet]
+                 , colliders :: [Collider] 
                  , elapsedTime :: Float
+                 , infoToShow  :: InfoToShow
+                 , health :: Health
                  }
-
-type Point = (Float,Float)
-data Collider = C Point Float 
 data Player = Player Collider Health Bullet 
-data Health = H Int
 data Bullet = B Collider
+data Collider = C Point Float 
+data Health = H Int
+type Point = (Float,Float)
+
 
 initialState :: GameState
-initialState = GameState ShowNothing 0
+initialState = GameState spaceship
