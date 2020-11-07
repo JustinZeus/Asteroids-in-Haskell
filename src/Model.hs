@@ -28,6 +28,7 @@ data GameState = GameState {
                  }
 
 
+
 initialState :: GameState
 initialState = GameState NoPlayer NoHealth 0
 
