@@ -21,4 +21,6 @@ inputKey (EventKey (Char c) _ _ _) gstate
    -- if any key other than z show player
     | c == 'p' = gstate {player = NoPlayer}
     | c == 'u' = gstate { player = Player (Collider (0,0) 20) (0,0)}
-inputKey _ gstate = gstate -- Otherwise keep the same
+inputKey _ gstate = gstate -- Otherwise keep the same  | ch == 'o' = Player(Collider (x,(y+25)) z) v       --up
+  | otherwise = Player(Collider (x,y) z) v
+movePlayer NoPlayer ch = NoPlayer
