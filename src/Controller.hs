@@ -21,23 +21,21 @@ inputKey (EventKey (Char c) _ _ _) gstate
    -- if any key other than z show player
     | c == 'p' = gstate {player = NoPlayer}
     | c == 'u' = gstate {player = Player (Collider (0,0) 20) (0,0)} 
-    | c == 'm' = gstate {asteroids = spawnAsteroid:[]}
+    | c == 'm' = gstate {asteroids = spawnAsteroid:spawnAsteroid2:[]}
     | otherwise = gstate {player = movePlayer(player gstate) c}
 
 inputKey _ gstate = gstate -- Otherwise keep the same
 
 spawnAsteroid :: Asteroid
-spawnAsteroid = Asteroid (Collider (0,0) 30) (0,0)
+spawnAsteroid = Asteroid (Collider (randomPoint,randomPoint) 30) (0,0)
 
-spawnAsteroid2 ::  Asteroid
-spawnAsteroid2 = Asteroid (Collider (100,20) 30) (0,0)
-
-
+spawnAsteroid2 :: Asteroid
+spawnAsteroid2 = Asteroid (Collider (200,300) 30) (0,0)
 
 
 movePlayer :: Player -> Char -> Player
 movePlayer (Player(Collider (x,y) z) (a,b)) ch 
-  | ch == 'd' =  Player(Collider (x,y) z) (a+5,b)      --right
+  | ch == 'd' =  Player(Collider (x,y) z) (a+5,b)       --right
   | ch == 'a' = Player(Collider (x,y) z) (a-5,b)        --left
   | ch == 's' = Player(Collider (x,y) z) (a,b-5)        --down
   | ch == 'w' = Player(Collider (x,y) z) (a,b+5)        --up

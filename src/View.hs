@@ -20,7 +20,7 @@ position_sps (Player (Collider (x,y) z) v) = translate x y spaceship
 
 
 viewPure :: GameState -> Picture
-viewPure gstate = pictures [playerimg, pausemsg,asteroid]
+viewPure gstate = pictures [playerimg, pausemsg, asteroid]
         where
                 playerimg = viewPlayer gstate
                 pausemsg = viewPause gstate
