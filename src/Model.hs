@@ -31,21 +31,23 @@ data Health = NoHealth
 type Point = (Float, Float)
 type Velocity = (Float, Float)
 
+
 nO_SECS_BETWEEN_CYCLES :: Float
 nO_SECS_BETWEEN_CYCLES = 5
 
  -- GameState data type -- 
 data GameState = GameState {
                   player :: Player
-                , asteroids :: Asteroid
+                , asteroids :: [Asteroid]
                 , bullets :: Bullet
                 , health :: Health
                 , elapsedTime :: Float
+                , randomSeed  :: Int
                  }
 
 
  -- initial GameState --
 initialState :: GameState
-initialState = GameState NoPlayer NoAsteroid NotShooting NoHealth 0
+initialState = GameState NoPlayer [] NotShooting NoHealth 0 83
 
 

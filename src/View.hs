@@ -19,11 +19,25 @@ position_sps :: Player -> Picture
 position_sps (Player (Collider (x,y) z) v) = translate x y spaceship
 
 
-
-
-
-
 viewPure :: GameState -> Picture
-viewPure gstate = case player gstate of
-        NoPlayer   -> scale 0.2 0.2 (translate (-1800) 1400 (color red (text "press u to unpause the game")))
-        Player (Collider (x,y) z) v -> pictures [translate x y (color white (circle(z))), scale 0.2 0.2 (translate (-1800) 1400 (color red (text "press p to pause the game")))]
+viewPure gstate = pictures [playerimg, pausemsg,asteroid]
+        where
+                playerimg = viewPlayer gstate
+                pausemsg = viewPause gstate
+                asteroid = viewAsteroids gstate
+       
+
+viewPlayer :: GameState -> Picture
+viewPlayer gstate = 
+         case player gstate of
+                NoPlayer   -> Blank
+                Player (Collider (x,y) z) v -> translate x y (color white (circle(z)))
+
+viewPause :: GameState -> Picture
+viewPause gstate = 
+         case player gstate of
+                NoPlayer   -> scale 0.2 0.2 (translate (-1800) 1400 (color white (text "press u to unpause the game")))
+                Player (Collider (x,y) z) v -> scale 0.2 0.2 (translate (-1800) 1400 (color white (text "press p to pause the game")))
+
+viewAsteroids :: GameState -> Picture
+viewAsteroids gstate = pictures [translate x y (color red (circle(z))) | Asteroid (Collider (x,y) z) v <- asteroids gstate]
