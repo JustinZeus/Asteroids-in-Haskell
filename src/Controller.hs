@@ -27,7 +27,7 @@ inputKey (EventKey (Char c) _ _ _) gstate
 inputKey _ gstate = gstate -- Otherwise keep the same
 
 spawnAsteroid :: Asteroid
-spawnAsteroid = Asteroid (Collider (randomPoint,randomPoint) 30) (0,0)
+spawnAsteroid = Asteroid (Collider (-200,200) 30) (0,0)
 
 spawnAsteroid2 :: Asteroid
 spawnAsteroid2 = Asteroid (Collider (200,300) 30) (0,0)
