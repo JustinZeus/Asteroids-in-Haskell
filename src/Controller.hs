@@ -10,9 +10,13 @@ import System.Random
 
 -- | Handle one iteration of the game
 step :: Float -> GameState -> IO GameState
+<<<<<<< Updated upstream
 step secs gstate
   |collisionWithAsteroid (player gstate) (asteroids gstate) == True = return $ gstate {player = NoPlayer, elapsedTime = elapsedTime gstate + secs}
   |collisionWithAsteroid (player gstate) (asteroids gstate) == False = return $ gstate {player = updatePlayer (player gstate), elapsedTime = elapsedTime gstate + secs}
+=======
+step secs gstate = return $ gstate {elapsedTime = elapsedTime gstate + secs}
+>>>>>>> Stashed changes
 
 -- | Handle user input
 input :: Event -> GameState -> IO GameState
@@ -28,6 +32,7 @@ inputKey (EventKey (Char c) _ _ _) gstate
 
 inputKey _ gstate = gstate -- Otherwise keep the same
 
+<<<<<<< Updated upstream
 spawnAsteroid :: Asteroid
 spawnAsteroid = Asteroid (Collider (-200,-300) 30) (0,0)
 
@@ -50,14 +55,29 @@ movePlayer (Player(Collider (x,y) z) (a,b)) ch
   | ch == 's' = Player(Collider (x,y) z) (a,b-5)        --down
   | ch == 'w' = Player(Collider (x,y) z) (a,b+5)        --up
   | otherwise = Player(Collider (x,y) z) (a,b) 
+=======
+
+movePlayer :: Player -> Char -> Player
+movePlayer (Player(Collider (x,y) z) (a,b)) ch 
+  | ch == 'd' =  Player(Collider (x,y) z) (a+25,b)      --right
+  | ch == 'a' = Player(Collider (x,y) z) (a-25,b)       --left
+  | ch == 's' = Player(Collider (x,y) z) (a,b-25)       --down
+  | ch == 'w' = Player(Collider (x,y) z) (a,b+25)       --up
+  | otherwise = Player(Collider (x,y) z) (a,b)
+>>>>>>> Stashed changes
 movePlayer NoPlayer ch = NoPlayer
 
 
 updatePlayer :: Player -> Player
+<<<<<<< Updated upstream
 updatePlayer player = 
   case player of
     NoPlayer -> NoPlayer
     (Player(Collider (x,y) z) (a,b)) -> (Player(Collider (x+a,y+b) z) (a,b))
+=======
+updatePlayer (Player(Collider (x,y) z) (a,b)) = Player(Collider (x+a,y+b) z) (a,b)
+
+>>>>>>> Stashed changes
 
 --We are giving bullet, the location of the player . So that in the end it appears that the bullet is shot from Player 
 createBullet :: Player -> Bullet

@@ -14,4 +14,4 @@ main = playIO (InWindow "Asteroids" (800, 800) (0, 0)) -- Or FullScreen
               initialState     -- Initial state
               view             -- View function
               input            -- Event function
-              step             -- Step function
+              step            -- Step function

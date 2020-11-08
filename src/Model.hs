@@ -48,6 +48,10 @@ data GameState = GameState {
 
  -- initial GameState --
 initialState :: GameState
+<<<<<<< Updated upstream
 initialState = GameState NoPlayer [] NotShooting NoHealth 0 83
+=======
+initialState = GameState NoPlayer [] NotShooting NoHealth 0
+>>>>>>> Stashed changes
 
 
