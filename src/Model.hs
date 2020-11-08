@@ -2,9 +2,12 @@
 --   which represent the state of the game
 module Model where
 
-data InfoToShow = ShowNothing
-                | ShowANumber Int
-                | ShowAChar   Char
+ -- GamePhase data type --
+data GamePhase = Playing
+                | Dead
+                | Start
+                | Pause
+                deriving (Eq,Show)
 
  -- Player and bullet data types -- 
 data Player = NoPlayer
@@ -37,16 +40,18 @@ nO_SECS_BETWEEN_CYCLES = 5
 
  -- GameState data type -- 
 data GameState = GameState {
-                  player :: Player
+                  gamePhase :: GamePhase
+                , player :: Player
                 , asteroids :: [Asteroid]
                 , bullets :: [Bullet]
                 , health :: Health
                 , elapsedTime :: Float
+                , score :: Int
                  }
 
 
  -- initial GameState --
 initialState :: GameState
-initialState = GameState NoPlayer [] [] NoHealth 0
+initialState = GameState Start NoPlayer [] [] NoHealth 0 0
 
 

@@ -20,12 +20,13 @@ position_sps (Player (Collider (x,y) z) v) = translate x y spaceship
 
 
 viewPure :: GameState -> Picture
-viewPure gstate = pictures [playerimg, pausemsg, asteroid, bulletimg]
+viewPure gstate = pictures [playerimg, pausemsg, asteroid, bulletimg, scorevw]
         where
                 playerimg = viewPlayer gstate
                 pausemsg = viewPause gstate
                 asteroid = viewAsteroids gstate
                 bulletimg = viewBullets gstate
+                scorevw = viewScore gstate
        
 
 viewPlayer :: GameState -> Picture
@@ -36,12 +37,17 @@ viewPlayer gstate =
 
 viewPause :: GameState -> Picture
 viewPause gstate = 
-         case player gstate of
-                NoPlayer   -> scale 0.2 0.2 (translate (-1800) 1400 (color white (text "press u to unpause the game")))
-                Player (Collider (x,y) z) v -> scale 0.2 0.2 (translate (-1800) 1400 (color white (text "press p to pause the game")))
+         case gamePhase gstate of
+                Start   -> scale 0.2 0.2 (translate (-1800) 1400 (color white (text "press o to start the game")))
+                Dead -> scale 0.2 0.2 (translate (-1800) 1400 (color white (text "press r to restart the game")))
+                Pause -> scale 0.2 0.2 (translate (-1800) 1400 (color white (text "press o to unpause the game")))
+                Playing -> scale 0.2 0.2 (translate (-1800) 1400 (color white (text "press p to pause the game or r to reset")))
 
 viewAsteroids :: GameState -> Picture
 viewAsteroids gstate = pictures [translate x y (color red (circle(z))) | Asteroid (Collider (x,y) z) v <- asteroids gstate]
 
 viewBullets :: GameState -> Picture
 viewBullets gstate = pictures [translate x y (color blue (circle(z))) | (Bullet (Collider (x,y) z) v)<- bullets gstate]
+
+viewScore :: GameState -> Picture
+viewScore gstate = pictures [scale 0.2 0.2 (translate (-1800) 1700 (color white (text "Score"))), scale 0.2 0.2 (translate (-1400) 1700 (color white (text (show (score gstate)))))]
