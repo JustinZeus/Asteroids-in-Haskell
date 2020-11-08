@@ -10,14 +10,15 @@ data Player = NoPlayer
               |Player {collider :: Collider, velocity :: Velocity} 
               deriving (Eq,Show)
 
-data Bullet = B Collider
-  deriving (Eq,Show)
+data Bullet = NotShooting 
+            |B Collider
+            deriving (Eq,Show)
 
 data Collider = Collider {position :: Point, radius :: Float} 
   deriving (Eq,Show)
 
-data Aestroid = NoAestroid
-                |Aestroid Collider Velocity   
+data Asteroid = NoAsteroid
+                |Asteroid Collider Velocity   
     deriving (Eq,Show)
 
 data Health = NoHealth
@@ -30,7 +31,8 @@ nO_SECS_BETWEEN_CYCLES = 5
 
 data GameState = GameState {
                   player :: Player
-                , aestroids :: Aestroid  
+                , asteroids :: Asteroid
+                , bullets :: Bullet
                 , health :: Health
                 , elapsedTime :: Float
                  }
@@ -38,6 +40,6 @@ data GameState = GameState {
 
 
 initialState :: GameState
-initialState = GameState NoPlayer NoAestroid NoHealth 0
+initialState = GameState NoPlayer NoAsteroid NotShooting NoHealth 0
 
 
