@@ -31,7 +31,7 @@ viewPlayer :: GameState -> Picture
 viewPlayer gstate = 
          case player gstate of
                 NoPlayer   -> Blank
-                Player (Collider (x,y) z) v -> translate x y (color white (circle(z)))
+                Player (Collider (x,y) z) v -> translate x y (color white (circleSolid (z)))
 
 viewPause :: GameState -> Picture
 viewPause gstate = 
