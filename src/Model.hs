@@ -42,16 +42,11 @@ data GameState = GameState {
                 , bullets :: Bullet
                 , health :: Health
                 , elapsedTime :: Float
-                , randomSeed  :: Int
                  }
 
 
  -- initial GameState --
 initialState :: GameState
-<<<<<<< Updated upstream
-initialState = GameState NoPlayer [] NotShooting NoHealth 0 83
-=======
 initialState = GameState NoPlayer [] NotShooting NoHealth 0
->>>>>>> Stashed changes
 
 
