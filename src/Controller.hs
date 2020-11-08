@@ -18,14 +18,15 @@ step secs gstate
   | (gamePhase gstate) == Playing && collisionWithAsteroid (player gstate) (asteroids gstate) == True = return $ gstate {gamePhase = Dead, player = NoPlayer, elapsedTime = 0}
   | (gamePhase gstate) == Playing && collisionWithAsteroid (player gstate) (asteroids gstate) == False && (elapsedTime gstate) > 3 = do
   randomNumber <- randomRIO (-400,400)  :: IO Float
-  randomNumber2 <- randomRIO (-400,400) :: IO Float
+  randomNumber2 <- randomRIO (-400,400) :: IO Float    
+  randomNumber5 <- randomRIO (-400,400) :: IO Float
   randomNumber3 <- randomRIO (-20,20)   :: IO Float
   randomNumber4 <- randomRIO (-20,20)   :: IO Float
   let chosennumber = randomNumber
   let chosennumber2 = randomNumber2
   let chosennumber3 = randomNumber3
   let chosennumber4 = randomNumber4
-  return $ gstate {player = updatePlayer (player gstate),score = (score gstate) + checkAsteroids (asteroids gstate) (bullets gstate),asteroids = (Asteroid(Collider (chosennumber,chosennumber2) 30) (chosennumber3,chosennumber4)):(moveAsteroids (asteroids gstate) (bullets gstate)),bullets = moveBullet (bullets gstate),elapsedTime = 0}
+  return $ gstate {player = updatePlayer (player gstate),score = (score gstate) + checkAsteroids (asteroids gstate) (bullets gstate),asteroids = (Asteroid(Collider (chosennumber,chosennumber2) 30) (chosennumber3,chosennumber4)):(Asteroid(Collider (150,chosennumber) 30) (chosennumber3,chosennumber4)):(moveAsteroids (asteroids gstate) (bullets gstate)),bullets = moveBullet (bullets gstate),elapsedTime = 0}
   | (gamePhase gstate) == Playing && collisionWithAsteroid (player gstate) (asteroids gstate) == False = return $ gstate {  player = updatePlayer (player gstate),
                                                                                                                             score = (score gstate) + checkAsteroids (asteroids gstate) (bullets gstate),
                                                                                                                             asteroids = moveAsteroids (asteroids gstate) (bullets gstate),
