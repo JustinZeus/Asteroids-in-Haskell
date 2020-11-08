@@ -11,7 +11,7 @@ data Player = NoPlayer
               deriving (Eq,Show)
 
 data Bullet = NotShooting 
-            |B Collider
+            |Bullet Collider
             deriving (Eq,Show)
 
 data Collider = Collider {position :: Point, radius :: Float} 

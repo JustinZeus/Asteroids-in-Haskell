@@ -12,10 +12,12 @@ spaceship :: Picture
 spaceship = color white (polygon [(0,0),(-50,50),(-50,50),(0,0)])
 
 bullet :: Picture
-bullet = color white (Circle(20))
+bullet = color white (Circle(5)) 
 
+--the position of the player is needed so that we could move it
 position_sps :: Player -> Picture
 position_sps (Player (Collider (x,y) z) v) = translate x y spaceship
+
 
 
 
