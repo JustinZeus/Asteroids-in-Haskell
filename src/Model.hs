@@ -12,7 +12,7 @@ data Player = NoPlayer
               deriving (Eq,Show)
 
 data Bullet = NotShooting 
-            |Bullet Collider
+            |Bullet Collider Velocity
             deriving (Eq,Show)
 
  -- Collider and health data types --
@@ -39,7 +39,7 @@ nO_SECS_BETWEEN_CYCLES = 5
 data GameState = GameState {
                   player :: Player
                 , asteroids :: [Asteroid]
-                , bullets :: Bullet
+                , bullets :: [Bullet]
                 , health :: Health
                 , elapsedTime :: Float
                  }
@@ -47,6 +47,6 @@ data GameState = GameState {
 
  -- initial GameState --
 initialState :: GameState
-initialState = GameState NoPlayer [] NotShooting NoHealth 0
+initialState = GameState NoPlayer [] [] NoHealth 0
 
 

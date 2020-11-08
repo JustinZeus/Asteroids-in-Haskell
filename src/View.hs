@@ -20,11 +20,12 @@ position_sps (Player (Collider (x,y) z) v) = translate x y spaceship
 
 
 viewPure :: GameState -> Picture
-viewPure gstate = pictures [playerimg, pausemsg, asteroid]
+viewPure gstate = pictures [playerimg, pausemsg, asteroid, bulletimg]
         where
                 playerimg = viewPlayer gstate
                 pausemsg = viewPause gstate
                 asteroid = viewAsteroids gstate
+                bulletimg = viewBullets gstate
        
 
 viewPlayer :: GameState -> Picture
@@ -41,3 +42,6 @@ viewPause gstate =
 
 viewAsteroids :: GameState -> Picture
 viewAsteroids gstate = pictures [translate x y (color red (circle(z))) | Asteroid (Collider (x,y) z) v <- asteroids gstate]
+
+viewBullets :: GameState -> Picture
+viewBullets gstate = pictures [translate x y (color blue (circle(z))) | (Bullet (Collider (x,y) z) v)<- bullets gstate]
