@@ -9,6 +9,7 @@ import Graphics.Gloss.Interface.IO.Game
 import System.Random
 
 -- | Handle one iteration of the game
+-- Multiple phases indicate what should happen every iteration --
 step :: Float -> GameState -> IO GameState
 step secs gstate
   | (gamePhase gstate) == Start = return $ gstate {player = NoPlayer, elapsedTime = 0}
@@ -16,12 +17,13 @@ step secs gstate
   | (gamePhase gstate) == Dead = return $ gstate {player = NoPlayer, elapsedTime = 0}
   | (gamePhase gstate) == Playing && collisionWithAsteroid (player gstate) (asteroids gstate) == True = return $ gstate {gamePhase = Dead, player = NoPlayer, elapsedTime = 0}
   | (gamePhase gstate) == Playing && collisionWithAsteroid (player gstate) (asteroids gstate) == False = return $ gstate {  player = updatePlayer (player gstate),
-                                                                                          score = (score gstate) + checkAsteroids (asteroids gstate) (bullets gstate),
-                                                                                          asteroids = moveAsteroids (asteroids gstate) (bullets gstate),
-                                                                                          bullets = moveBullet (bullets gstate),
-                                                                                          elapsedTime = elapsedTime gstate + secs}
+                                                                                                                            score = (score gstate) + checkAsteroids (asteroids gstate) (bullets gstate),
+                                                                                                                            asteroids = moveAsteroids (asteroids gstate) (bullets gstate),
+                                                                                                                            bullets = moveBullet (bullets gstate),
+                                                                                                                            elapsedTime = elapsedTime gstate + secs}
 
 -- | Handle user input
+-- different keystrokes influence phase changes, spawning of bullets and player movement
 input :: Event -> GameState -> IO GameState
 input e gstate = return (inputKey e gstate)
 ;
@@ -30,12 +32,12 @@ inputKey (EventKey (Char c) _ _ _) gstate
    -- if any key other than z show player
     | c == 'o' && (gamePhase gstate) == Pause = gstate {gamePhase = Playing}
     | c == 'p' && (gamePhase gstate) == Playing = gstate {gamePhase = Pause}
-    | c == 'r' && (gamePhase gstate) == Dead = gstate {gamePhase = Playing, player = Player (Collider (0,0) 20) (0,0), bullets = [], asteroids = []}
-    | c == 'r' && (gamePhase gstate) == Playing = gstate {gamePhase = Playing, player = Player (Collider (0,0) 20) (0,0), bullets = [], asteroids = []}
+    | c == 'r' && (gamePhase gstate) == Dead = gstate {gamePhase = Playing, player = Player (Collider (0,0) 20) (0,0), bullets = [], asteroids = [], score = 0}
+    | c == 'r' && (gamePhase gstate) == Playing = gstate {gamePhase = Playing, player = Player (Collider (0,0) 20) (0,0), bullets = [], asteroids = [], score = 0}
     | c == 'o' && (gamePhase gstate) == Start = gstate {gamePhase = Playing, player = Player (Collider (0,0) 20) (0,0)} 
     | c == 'b' && (gamePhase gstate) == Playing = gstate {bullets = createBullet (player gstate):bullets gstate} 
     | c == 'm' = gstate {asteroids = spawnAsteroid:spawnAsteroid2:spawnAsteroid3:spawnAsteroid4:asteroids gstate}
-    | otherwise = gstate {player = movePlayer(player gstate) c}
+    | otherwise = gstate {player = movePlayer(player gstate) c gstate}
 
 inputKey _ gstate = gstate -- Otherwise keep the same
 
@@ -54,6 +56,8 @@ spawnAsteroid3 = Asteroid (Collider (-200,300) 30) (10,-5)
 spawnAsteroid4 :: Asteroid
 spawnAsteroid4 = Asteroid (Collider (200,300) 30) (-20,-10)
 
+--goes through the list of asteroids and bullets and if they collide makes the asteroids dissapear
+
 moveAsteroids :: [Asteroid] -> [Bullet] -> [Asteroid]
 moveAsteroids [] _ = []
 moveAsteroids [NoAsteroid] _ = [NoAsteroid]
@@ -61,6 +65,8 @@ moveAsteroids (NoAsteroid:xs) bullets = (NoAsteroid:moveAsteroids xs bullets)
 moveAsteroids ((Asteroid(Collider(x,y) z) (a,b)):xs) bullets
   | collisionWithBullet (bullets) (Asteroid(Collider(x,y) z) (a,b)) == True = (NoAsteroid:moveAsteroids xs bullets)
   | otherwise = ((Asteroid(Collider ((x+a),(y+b)) z) (a,b)):moveAsteroids xs bullets)
+
+--goes through the list of asteroids and bullets and if they collide in the next function makes the score go up
 
 checkAsteroids :: [Asteroid] -> [Bullet] -> Int
 checkAsteroids [] _ = 0
@@ -89,29 +95,26 @@ collisionWithBullet ((Bullet(Collider ((x),(y)) z) (a,b)):xs) (Asteroid (Collide
   | abs(x-x2) < z+z2 && abs(y-y2) < z+z2 = True
   | otherwise = collisionWithBullet xs (Asteroid (Collider(x2,y2) z2) (a2,b2))
 
-
-
 -- player functions --
 
-movePlayer :: Player -> Char -> Player
-movePlayer (Player(Collider (x,y) z) (a,b)) ch 
-  | ch == 'd' && a < 10 =  Player(Collider (x,y) z) (a+3,b)       --right
-  | ch == 'a' && a > -10 = Player(Collider (x,y) z) (a-3,b)        --left
-  | ch == 's' && b < 10 = Player(Collider (x,y) z) (a,b-3)        --down
-  | ch == 'w' && b > -10 = Player(Collider (x,y) z) (a,b+3)        --up
+movePlayer :: Player -> Char -> GameState -> Player
+movePlayer (Player(Collider (x,y) z) (a,b)) ch gstate
+  | ch == 'd' && a < 10  && (gamePhase gstate) == Playing = Player(Collider (x,y) z) (a+3,b)        --right
+  | ch == 'a' && a > -10 && (gamePhase gstate) == Playing = Player(Collider (x,y) z) (a-3,b)        --left
+  | ch == 'w' && b < 10 && (gamePhase gstate) == Playing = Player(Collider (x,y) z) (a,b+3)         --up
+  | ch == 's' && b > -10 && (gamePhase gstate) == Playing = Player(Collider (x,y) z) (a,b-3)        --down
   | otherwise = Player(Collider (x,y) z) (a,b) 
-movePlayer NoPlayer ch = NoPlayer
+movePlayer NoPlayer ch gstate = NoPlayer
 
 updatePlayer :: Player -> Player
 updatePlayer NoPlayer = NoPlayer
-updatePlayer (Player(Collider (x,y) z) (a,b)) | (check (x,y) (-400,400)) = Player(Collider (x+a,y+b) z) (a,b)
-                                              | otherwise                =  Player(Collider (0,0) z) (a,b)
+updatePlayer (Player(Collider (x,y) z) (a,b))
+                                                | (check (x,y) (-400,400)) = Player(Collider (x+a,y+b) z) (a,b)
+                                                | otherwise                =  Player(Collider (0,0) z) (a,b)
 
  
 check :: (Float,Float) -> (Float,Float) -> Bool
 check (x,y) (min,max) = x >= min && x <= max && y >= min && y <= max 
-
-
 
 
 -- bullet functions -- 
@@ -133,3 +136,7 @@ moveBullet [] = []
 moveBullet [NotShooting] = [NotShooting]
 moveBullet ((Bullet(Collider(x,y) z) (a,b)):xs) = ((Bullet(Collider ((x+a),(y+b)) z) (a,b)):moveBullet xs)
 
+
+-- save top score in a file
+scoreSave :: GameState -> IO ()
+scoreSave gstate = writeFile "score.txt" (show (score gstate))
