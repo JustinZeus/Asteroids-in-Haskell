@@ -12,10 +12,20 @@ import System.Random
 -- Multiple phases indicate what should happen every iteration --
 step :: Float -> GameState -> IO GameState
 step secs gstate
-  | (gamePhase gstate) == Start = return $ gstate {player = NoPlayer, elapsedTime = 0}
+  | (gamePhase gstate) == Start = return $ gstate {player = NoPlayer, asteroids = spawnAsteroid, elapsedTime = 0}
   | (gamePhase gstate) == Pause = return $ gstate {gamePhase = Pause}
   | (gamePhase gstate) == Dead = return $ gstate {player = NoPlayer, elapsedTime = 0}
   | (gamePhase gstate) == Playing && collisionWithAsteroid (player gstate) (asteroids gstate) == True = return $ gstate {gamePhase = Dead, player = NoPlayer, elapsedTime = 0}
+  | (gamePhase gstate) == Playing && collisionWithAsteroid (player gstate) (asteroids gstate) == False && (elapsedTime gstate) > 3 = do
+  randomNumber <- randomRIO (-400,400)  :: IO Float
+  randomNumber2 <- randomRIO (-400,400) :: IO Float
+  randomNumber3 <- randomRIO (-20,20)   :: IO Float
+  randomNumber4 <- randomRIO (-20,20)   :: IO Float
+  let chosennumber = randomNumber
+  let chosennumber2 = randomNumber2
+  let chosennumber3 = randomNumber3
+  let chosennumber4 = randomNumber4
+  return $ gstate {player = updatePlayer (player gstate),score = (score gstate) + checkAsteroids (asteroids gstate) (bullets gstate),asteroids = (Asteroid(Collider (chosennumber,chosennumber2) 30) (chosennumber3,chosennumber4)):(moveAsteroids (asteroids gstate) (bullets gstate)),bullets = moveBullet (bullets gstate),elapsedTime = 0}
   | (gamePhase gstate) == Playing && collisionWithAsteroid (player gstate) (asteroids gstate) == False = return $ gstate {  player = updatePlayer (player gstate),
                                                                                                                             score = (score gstate) + checkAsteroids (asteroids gstate) (bullets gstate),
                                                                                                                             asteroids = moveAsteroids (asteroids gstate) (bullets gstate),
@@ -32,11 +42,10 @@ inputKey (EventKey (Char c) _ _ _) gstate
    -- if any key other than z show player
     | c == 'o' && (gamePhase gstate) == Pause = gstate {gamePhase = Playing}
     | c == 'p' && (gamePhase gstate) == Playing = gstate {gamePhase = Pause}
-    | c == 'r' && (gamePhase gstate) == Dead = gstate {gamePhase = Playing, player = Player (Collider (0,0) 20) (0,0), bullets = [], asteroids = [], score = 0}
+    | c == 'r' && (gamePhase gstate) == Dead = gstate {gamePhase = Playing, player = Player (Collider (0,0) 20) (0,0), bullets = [], asteroids = spawnAsteroid, score = 0}
     | c == 'r' && (gamePhase gstate) == Playing = gstate {gamePhase = Playing, player = Player (Collider (0,0) 20) (0,0), bullets = [], asteroids = [], score = 0}
     | c == 'o' && (gamePhase gstate) == Start = gstate {gamePhase = Playing, player = Player (Collider (0,0) 20) (0,0)} 
     | c == 'b' && (gamePhase gstate) == Playing = gstate {bullets = createBullet (player gstate):bullets gstate} 
-    | c == 'm' = gstate {asteroids = spawnAsteroid:spawnAsteroid2:spawnAsteroid3:spawnAsteroid4:asteroids gstate}
     | otherwise = gstate {player = movePlayer(player gstate) c gstate}
 
 inputKey _ gstate = gstate -- Otherwise keep the same
@@ -44,17 +53,8 @@ inputKey _ gstate = gstate -- Otherwise keep the same
 
 -- enemy functions --
 
-spawnAsteroid :: Asteroid
-spawnAsteroid = Asteroid (Collider (-200,-300) 30) (5,10)
-
-spawnAsteroid2 :: Asteroid
-spawnAsteroid2 = Asteroid (Collider (200,-300) 30) (-10,20)
-
-spawnAsteroid3 :: Asteroid
-spawnAsteroid3 = Asteroid (Collider (-200,300) 30) (10,-5)
-
-spawnAsteroid4 :: Asteroid
-spawnAsteroid4 = Asteroid (Collider (200,300) 30) (-20,-10)
+spawnAsteroid :: [Asteroid]
+spawnAsteroid = [Asteroid (Collider (-200,-300) 30) (5,10),Asteroid (Collider (200,-300) 30) (-10,20),Asteroid (Collider (-200,300) 30) (10,-5), Asteroid (Collider (200,300) 30) (-20,-10)]
 
 --goes through the list of asteroids and bullets and if they collide makes the asteroids dissapear
 

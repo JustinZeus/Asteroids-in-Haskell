@@ -40,8 +40,12 @@ viewPause gstate =
 
 -- loop through all the asteroids in the gameState and draw them according to their positions --
 viewAsteroids :: GameState -> Picture
-viewAsteroids gstate = pictures [translate x y (color red (circle(z))) | Asteroid (Collider (x,y) z) v <- asteroids gstate]
-
+viewAsteroids gstate =
+        case gamePhase gstate of
+                Start -> Blank
+                Dead -> pictures [translate x y (color red (circle(z))) | Asteroid (Collider (x,y) z) v <- asteroids gstate]
+                Pause -> pictures [translate x y (color red (circle(z))) | Asteroid (Collider (x,y) z) v <- asteroids gstate]
+                Playing -> pictures [translate x y (color red (circle(z))) | Asteroid (Collider (x,y) z) v <- asteroids gstate]
 -- loop through all the bullets in the gameState and draw them according to their positions --
 
 viewBullets :: GameState -> Picture
